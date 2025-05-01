@@ -1,0 +1,27 @@
+{
+  "type": "Compass Connections",
+  "version": {
+    "$numberInt": ""
+  },
+  "connections": [
+    {
+      "id": "4dd7cbbf-1398-49c2-8dcf-b66c57b18080",
+      "lastUsed": {
+        "$date": {
+          "$numberLong": "1745885423561"
+        }
+      },
+      "favorite": {
+        "name": "mMbank.com",
+        "color": "no-color"
+      },
+      "savedConnectionType": "favorite",
+      "connectionOptions": {
+        "connectionString": "mongodb://localhost:27017/",
+        "oidc": {
+          "serializedState": "eyJvaWRjUGx1Z2luU3RhdGVWZXJzaW9uIjowLCJzdGF0ZSI6W119"
+        }
+      }
+    }
+  ]
+}
