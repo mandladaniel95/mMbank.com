@@ -1,2 +1,2 @@
-# mMbank.com
+# mMbank.dev
 mMbank
