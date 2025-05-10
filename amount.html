@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Amount</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .Amount-form {
+      width: 280px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .Amount-form label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .Amount-form output[type="money"], .Amount-form output[type="money"] {
+      width: 92%;
+      height: 40px;
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .Amount-form output[type="submit"] {
+      width: 92%;
+      height: 40px;
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .Amount-form output[type="submit"]:hover {
+      background-color: #233523;
+    }
+  </style>
+</head>
+<body>
+  <h1>View Amount</h1>
+  <p>Current Balance: <span id="balance"></span></p>
+
+  <script>
+    // Fetch balance from server-side API
+    fetch('/get-balance')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('balance').innerText = data.balance;
+      })
+      .catch(error => console.error(error));
+  </script>
+</body>
+</html>

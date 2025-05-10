@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SendCash</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .sendCash-form {
+      width: 280px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .sendCash-form label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .sendCash-form input[type="money"], .sendCash-form input[type="money"] {
+      width: 92%;
+      height: 40px;
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .sendCash-form input[type="submit"] {
+      width: 92%;
+      height: 40px;
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .sendCash-form input[type="submit"]:hover {
+      background-color: #233523;
+    }
+  </style>
+</head>
+<body>
+  <h1>Send Cash</h1>
+  <form id="send-cash-form">
+    <label for="recipient-email">Recipient's Email:</label>
+    <input type="email" id="recipient-email" name="recipient-email"><br><br>
+    <label for="recipient-number">Recipient's number:</label>
+    <input type="number" id="recipient-number" name="recipient-number"><br><br>
+    <label for="amount">Amount:</label>
+    <input type="number" id="amount" name="amount"><br><br>
+    <label for="message">Message:</label>
+    <textarea id="message" name="message"></textarea><br><br>
+    <button type="submit">Send Cash</button>
+  </form>
+
+  <script>
+    const sendCashForm = document.getElementById('send-cash-form');
+
+    sendCashForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const recipientEmail = document.getElementById('recipient-email').value;
+      const number = document.getElementById('number').value;
+      const amount = document.getElementById('amount').value;
+      const message = document.getElementById('message').value;
+
+      try {
+        const response = await fetch('/send-cash', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            recipientEmail,
+            recipientNumber,
+            amount,
+            message,
+          }),
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          console.log('Cash sent successfully');
+        } else {
+          console.error('Failed to send cash');
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Voucher</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .voucher-form {
+      width: 280px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .voucher-form label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .voucher-form input[type="money"], .voucher-form input[type="money"] {
+      width: 92%;
+      height: 40px;
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .voucher-form input[type="submit"] {
+      width: 92%;
+      height: 40px;
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .voucher-form input[type="submit"]:hover {
+      background-color: #233523;
+    }
+  </style>
+</head>
+<body>
+  <h1>Buy Voucher</h1>
+  <form id="buy-voucher-form">
+    <label for="voucher-type">Voucher Type:</label>
+    <select id="voucher-type" name="voucher-type">
+      <option value="Gift Card">Gift Card</option>
+      <option value="Prepaid Card">Prepaid Card</option>
+      <option value="Discount Voucher">Discount Voucher</option>
+    </select><br><br>
+    <label for="amount">Amount:</label>
+    <input type="number" id="amount" name="amount"><br><br>
+    <label for="payment-method">Payment Method:</label>
+    <select id="payment-method" name="payment-method">
+      <option value="Credit Card">Credit Card</option>
+      <option value="Debit Card">Debit Card</option>
+      <option value="Online Banking">Online Banking</option>
+    </select><br><br>
+    <button type="submit">voucher</button>
+  </form>
+
+  <script>
+    const buyVoucherForm = document.getElementById('Svoucher-form');
+
+    buyVoucherForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const voucherType = document.getElementById('voucher-type').value;
+      const amount = document.getElementById('amount').value;
+      const paymentMethod = document.getElementById('payment-method').value;
+
+      try {
+        const response = await fetch('/buy-voucher', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            voucherType,
+            amount,
+            paymentMethod,
+          }),
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          console.log('Voucher purchased successfully');
+          // Generate voucher code and display it to the user
+          document.getElementById('voucher-code').innerText = data.voucherCode;
+        } else {
+          console.error('Failed to purchase voucher');
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  </script>
+
+  <p>Voucher Code: <span id="voucher-code"></span></p>
+</body>
+</html>

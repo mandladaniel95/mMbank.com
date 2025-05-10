@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Deposit</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .Deposit-form {
+      width: 280px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .Deposit-form label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .Deposit-form input[type="money"], .Deposit-form input[type="money"] {
+      width: 92%;
+      height: 40px;
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .Deposit-form input[type="submit"] {
+      width: 92%;
+      height: 40px;
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .Deposit-form input[type="submit"]:hover {
+      background-color: #233523;
+    }
+  </style>
+</head>
+<body>
+  <h1>Deposit Form</h1>
+  <form id="deposit-form">
+    <label for="amount">Amount:</label>
+    <input type="number" id="amount" name="amount"><br><br>
+    <label for="payment-method">Payment Method:</label>
+    <select id="payment-method" name="payment-method">
+      <option value="Credit Card">Credit Card</option>
+      <option value="Debit Card">Debit Card</option>
+      <option value="EFT">EFT</option>
+    </select><br><br>
+    <label for="card-number">Card Number:</label>
+    <input type="text" id="card-number" name="card-number"><br><br>
+    <label for="expiry-date">Expiry Date:</label>
+    <input type="text" id="expiry-date" name="expiry-date" placeholder="MM/YYYY"><br><br>
+    <label for="cvv">CVV:</label>
+    <input type="text" id="cvv" name="cvv"><br><br>
+    <button type="submit">Make Deposit</button>
+  </form>
+
+  <script>
+    app.post('/make-deposit', async (req, res) => {
+  try {
+    const {
+      amount,
+      paymentMethod,
+      cardNumber,
+      expiryDate,
+      cvv,
+    } = req.body;
+
+    // Validate deposit details
+    if (!amount || !paymentMethod || !cardNumber || !expiryDate || !cvv) {
+      return res.status(400).json({ error: 'Invalid deposit details' });
+    }
+
+    // Process deposit using payment gateway
+    const paymentGateway = new PaymentGateway();
+    const depositResponse = await paymentGateway.processDeposit({
+      amount,
+      paymentMethod,
+      cardNumber,
+      expiryDate,
+      cvv,
+    });
+
+    // Update account balance
+    if (depositResponse.success) {
+      const account = await Account.findById(req.user.accountId);
+      account.balance += amount;
+      await account.save();
+    }
+
+    // Send confirmation
+    const confirmationMessage = `Deposit of ${amount} made successfully`;
+    await sendConfirmationMessage(req.user.email, confirmationMessage);
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to make deposit' });
+  }
+});
+  </script>
+</body>
+</html>

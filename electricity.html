@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Buy Electricity</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .Electricity-form {
+      width: 280px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .Electricity-form label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .Electricity-form input[type="money"], .Electricity-form input[type="money"] {
+      width: 92%;
+      height: 40px;
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .Electricity-form input[type="submit"] {
+      width: 92%;
+      height: 40px;
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .sendCash-form input[type="submit"]:hover {
+      background-color: #233523;
+    }
+  </style>
+</head>
+<body>
+  <h1>Buy Electricity</h1>
+  <form id="buy-electricity-form">
+    <label for="meter-number">Meter Number:</label>
+    <input type="text" id="meter-number" name="meter-number"><br><br>
+    <label for="amount">Amount:</label>
+    <input type="number" id="amount" name="amount"><br><br>
+    <label for="payment-method">Payment Method:</label>
+    <select id="payment-method" name="payment-method">
+      <option value="Credit Card">Credit Card</option>
+      <option value="Debit Card">Debit Card</option>
+      <option value="Online Banking">Online Banking</option>
+    </select><br><br>
+    <button type="submit">Buy Electricity</button>
+  </form>
+
+  <script>
+    const buyElectricityForm = document.getElementById('buy-electricity-form');
+
+    buyElectricityForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const meterNumber = document.getElementById('meter-number').value;
+      const amount = document.getElementById('amount').value;
+      const paymentMethod = document.getElementById('payment-method').value;
+
+      try {
+        const response = await fetch('/buy-electricity', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            meterNumber,
+            amount,
+            paymentMethod,
+          }),
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          console.log('Electricity purchased successfully');
+          // Display token or confirmation message
+          document.getElementById('token').innerText = data.token;
+        } else {
+          console.error('Failed to purchase electricity');
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  </script>
+
+  <p>Token: <span id="token"></span></p>
+</body>
+</html>

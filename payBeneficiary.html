@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>payBeneficiary Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .Payment-form {
+      width: 280px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .Payment-form label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .Payment-form input[type="money"], .Payment-form input[type="money"] {
+      width: 92%;
+      height: 40px;
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .Payment-form input[type="submit"] {
+      width: 92%;
+      height: 40px;
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .Payment-form input[type="submit"]:hover {
+      background-color: #233523;
+    }
+  </style>
+</head>
+<body>
+  <h1>Payment Form</h1>
+  <form id="payment-form">
+    <label for="beneficiary-name">Beneficiary Name:</label>
+    <input type="text" id="beneficiary-name" name="beneficiary-name"><br><br>
+    <label for="beneficiary-bank">Beneficiary Bank:</label>
+    <select id="beneficiary-bank" name="beneficiary-bank">
+      <option value="ABSA">ABSA</option>
+      <option value="FNB">FNB</option>
+      <option value="Nedbank">Nedbank</option>
+      <option value="Standard Bank">Standard Bank</option>
+    </select><br><br>
+    <label for="beneficiary-account-number">Beneficiary Account Number:</label>
+    <input type="text" id="beneficiary-account-number" name="beneficiary-account-number"><br><br>
+    <label for="amount">Amount:</label>
+    <input type="number" id="amount" name="amount"><br><br>
+    <label for="payment-method">Payment Method:</label>
+    <select id="payment-method" name="payment-method">
+      <option value="EFT">EFT</option>
+      <option value="Debit Card">Debit Card</option>
+      <option value="Credit Card">Credit Card</option>
+    </select><br><br>
+    <button type="submit">Make Payment</button>
+  </form>
+
+  <script>
+   Server-side code (Node.js)
+
+const express = require('express');
+const app = express();
+const stripe = require('stripe')('YOUR_STRIPE_SECRET_KEY');
+
+// Payment processing logic
+app.post('/process-payment', async (req, res) => {
+  try {
+    const {
+      beneficiaryName,
+      beneficiaryBank,
+      beneficiaryAccountNumber,
+      amount,
+      paymentMethod,
+    } = req.body;
+
+    // Validate payment details
+    if (!beneficiaryName || !beneficiaryBank || !beneficiaryAccountNumber || !amount || !paymentMethod) {
+      return res.status(400).json({ error: 'Invalid payment details' });
+    }
+
+    // Create a Stripe payment intent
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount,
+      currency: 'zar',
+      payment_method_types: [paymentMethod],
+    });
+
+    // Confirm the payment intent
+    const confirmedPaymentIntent = await stripe.paymentIntents.confirm(paymentIntent.id, {
+      payment_method_data: {
+        type: paymentMethod,
+      },
+    });
+
+    // Process payment logic here
+    // Send payment details to beneficiary's bank
+    // Update payment status in database
+    res.json({ message: 'Payment processed successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to process payment' });
+  }
+});
+  </script>
+</body>
+</html>

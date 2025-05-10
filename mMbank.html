@@ -92,7 +92,17 @@
   </section>
     
 </body>  
-    
+  
+<nav>
+  <ul>
+<li><a href="createNewAccount.html">createNewAccount</a></li>
+</ul>
+</nav>
+<nav>
+  <ul>
+<li><a href="login.html">Sign-in</a></li>
+</ul>
+</nav>
   <div class="login-form">
     <h2>Login mMbank</h2>
     <form>
@@ -101,13 +111,21 @@
 
       <label for="password">Password:</label>
       <input type="password" id="password" name="password" required>
-
+      
       <input type="submit" value="Login">
       <nav>
         <ul>
-      <li><a href="createNewAccount.html">createNewAccount</a></li>
-      </ul>
-      </nav>
+      <script>
+        
+        // JavaScript Code
+        const loginButton = document.getElementById('login-button');
+      
+        loginButton.addEventListener('click', () => {z
+          window.location.href = '/home'; 
+        });
+      </script>
+         </ul>
+        </nav>
     </form>
   </div>
 </body>

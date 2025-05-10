@@ -9,7 +9,7 @@
       font-family: Arial, sans-serif;
     }
 
-    .create account-form {
+    .createNewAccount account-form {
       width: 300px;
       margin: 50px auto;
       padding: 20px;
@@ -18,12 +18,12 @@
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
-    .create account-form label {
+    .createNewAccount account-form label {
       display: block;
       margin-bottom: 10px;
     }
 
-    .create account-form input[type="text"], .create account-form input[type="password"] {
+    .createNewAccount account-form input[type="text"], .createNewAccount account-form input[type="password"] {
       width: 100%;
       height: 40px;
       margin-bottom: 20px;
@@ -31,7 +31,7 @@
       border: 1px solid #ccc;
     }
 
-    .create account-form input[type="submit"] {
+    .createNewAccount account-form input[type="submit"] {
       width: 100%;
       height: 40px;
       background-color: #4CAF50;
@@ -42,7 +42,7 @@
       cursor: pointer;
     }
 
-    .create account-form input[type="submit"]:hover {
+    .createNewAccount account-form input[type="submit"]:hover {
       background-color: #3e8e41;
     }
   </style>
@@ -50,7 +50,7 @@
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="Mandla Mamba" width="100" height="100">
+    <img src="logo.png" alt="logo" width="100" height="100">
   </header>
   <body>
   
@@ -68,7 +68,7 @@
 
 </body>  
     
-  <div class="create account-form">
+  <div class="createNewAccount-form">
     <h2>create account</h2>
     <form>
       <label for="username">Username:</label>
@@ -79,14 +79,14 @@
 
       <label for="contact">contact:</label>
       <input type="number" id="contact" name="contact" required>
-
+<option>
       <label for="fingerprint">fingerprint:</label>
       <input type="fingerprint" id="fingerprint" name="fingerprint" required>
-
+ </option>
       <label for="password">Password:</label>
       <input type="password" id="password" name="password" required>
 
-      <input type="submit" value="create account">
+      <input type="submit" value="createNewAccount">
     </form>
   </div>
 </body>

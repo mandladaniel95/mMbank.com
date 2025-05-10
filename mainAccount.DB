@@ -1,0 +1,80 @@
+const mongoose = require('mongoose');
+
+const mainAccountSchema = new mongoose.Schema({
+  accountNumber: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  accountHolderName: {
+    type: String,
+    required: true,
+  },
+  balance: {
+    type: Number,
+    required: true,
+    default: 0.00,
+  },
+  accountType: {
+    type: String,
+    enum: ['checking', 'savings'],
+  },
+  status: {
+    type: String,
+    enum: ['active', 'inactive'],
+    default: 'active',
+  },
+  transactions: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Transaction',
+    },
+  ],
+});
+
+const MainAccount = mongoose.model('MainAccount', mainAccountSchema);
+
+module.exports = MainAccount;
+
+
+const mainAccount = new MainAccount({
+  accountNumber: '1692357873',
+  accountHolderName: 'Mandla mamba',
+  balance: 5500.00,
+  accountType: 'checking',
+});
+
+mainAccount.save((err) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log('Main account saved successfully');
+  }
+});
+
+
+app.post('/create-main-account', async (req, res) => {
+  try {
+    const { accountNumber, accountHolderName, balance, accountType } = req.body;
+    const newMainAccount = new MainAccount({
+      accountNumber,
+      accountHolderName,
+      balance,
+      accountType,
+    });
+    await newMainAccount.save();
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to create main account' });
+  }
+});
+
+app.get('/get-main-account', async (req, res) => {
+  try {
+    const mainAccount = await MainAccount.findOne({ accountNumber: req.query.accountNumber });
+    res.json({ success: true, mainAccount });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get main account' });
+  }

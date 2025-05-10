@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>printSlip</title>
+  <style>
+    @media print {
+      .no-print {
+        display: none;
+      }
+    }
+  </style>
+  
+</head>
+<body>
+  <h1>Slip Details</h1>
+  <p>Transaction ID: <span id="transaction-id"></span></p>
+  <p>Date: <span id="date"></span></p>
+  <p>Amount: <span id="amount"></span></p>
+  <p>Description: <span id="description"></span></p>
+
+  <button class="no-print" onclick="printSlip()">Print Slip</button>
+
+  <script>
+    // Fetch slip details from server-side API
+    fetch('/get-slip-details')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('transaction-id').innerText = data.transactionId;
+        document.getElementById('date').innerText = data.date;
+        document.getElementById('amount').innerText = data.amount;
+        document.getElementById('description').innerText = data.description;
+      })
+      .catch(error => console.error(error));
+
+    function printSlip() {
+      window.print();
+    }
+  </script>
+</body>
+</html>

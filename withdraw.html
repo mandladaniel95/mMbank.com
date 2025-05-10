@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Withdrawal</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .Withdrawal-form {
+      width: 280px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .Withdrawal-form label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .Withdrawal-form input[type="money"], .Withdrawal-form input[type="money"] {
+      width: 92%;
+      height: 40px;
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .Withdrawal-form input[type="submit"] {
+      width: 92%;
+      height: 40px;
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .Withdrawal-form input[type="submit"]:hover {
+      background-color: #233523;
+    }
+  </style>
+</head>
+<body>
+  <h1>Withdrawal Form</h1>
+  <form id="withdrawal-form">
+    <label for="amount">Amount:</label>
+    <input type="number" id="amount" name="amount"><br><br>
+    <label for="payment-method">Payment Method:</label>
+    <select id="payment-method" name="payment-method">
+      <option value="Bank Transfer">Bank Transfer</option>
+      <option value="Credit Card">Credit Card</option>
+      <option value="Debit Card">Debit Card</option>
+    </select><br><br>
+    <button type="submit">Make Withdrawal</button>
+  </form>
+
+  <script>
+    const withdrawalForm = document.getElementById('withdrawal-form');
+
+    withdrawalForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const amount = document.getElementById('amount').value;
+      const paymentMethod = document.getElementById('payment-method').value;
+
+      try {
+        const response = await fetch('/make-withdrawal', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            amount,
+            paymentMethod,
+          }),
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          console.log('Withdrawal made successfully');
+        } else {
+          console.error('Failed to make withdrawal');
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  </script>
+</body>
+</html>

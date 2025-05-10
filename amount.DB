@@ -1,0 +1,66 @@
+const mongoose = require('mongoose');
+
+const amountSchema = new mongoose.Schema({
+  amount: {
+    type: Number,
+    required: true,
+  },
+  description: {
+    type: String,
+  },
+  transactionType: {
+    type: String,
+    enum: ['credit', 'debit'],
+  },
+  transactionDate: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
+const Amount = mongoose.model('Amount', amountSchema);
+
+module.exports = Amount;
+
+
+const amount = new Amount({
+  amount: 100.00,
+  description: 'Test transaction',
+  transactionType: 'credit',
+});
+
+amount.save((err) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log('Amount saved successfully');
+  }
+});
+
+
+
+app.post('/add-amount', async (req, res) => {
+  try {
+    const { amount, description, transactionType } = req.body;
+    const newAmount = new Amount({
+      amount,
+      description,
+      transactionType,
+    });
+    await newAmount.save();
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to add amount' });
+  }
+});
+
+app.get('/get-amounts', async (req, res) => {
+  try {
+    const amounts = await Amount.find();
+    res.json({ success: true, amounts });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get amounts' });
+  }
+});
