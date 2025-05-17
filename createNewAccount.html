@@ -60,7 +60,6 @@
           <li><a href="services.html">Services</a></li>
         </ul>
       </nav>
-  <!-- Example content sections -->
   <section id="home">
     <h1>Welcome to our website! mMbank.com</h1>
     <p>Mandla Mamba Bank.int</p>
@@ -77,15 +76,21 @@
       <label for="@gmail.com">@gmail.com:</label>
       <input type="email" id="@gmail.com" name="@gmail.com" required>
 
-      <label for="contact">contact:</label>
-      <input type="number" id="contact" name="contact" required>
+      <label for="number">number:</label>
+      <input type="number" id="number" name="number" required>
 <option>
       <label for="fingerprint">fingerprint:</label>
       <input type="fingerprint" id="fingerprint" name="fingerprint" required>
  </option>
       <label for="password">Password:</label>
       <input type="password" id="password" name="password" required>
-
+ <script>
+      const createNewAccountButton = document.getElementById('createNewAccount-button');
+      
+        createNewAccountButton.addEventListener('click', () => {z
+          window.location.href = '/home'; 
+        });
+        </script>
       <input type="submit" value="createNewAccount">
     </form>
   </div>

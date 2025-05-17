@@ -1,0 +1,132 @@
+const mongoose = require('mongoose');
+
+const airtimeSchema = new mongoose.Schema({
+  transactionId: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  phoneNumber: {
+    type: String,
+    required: true,
+  },
+  amount: {
+    type: Number,
+    required: true,
+  },
+  networkProvider: {
+    type: String,
+    required: true,
+  },
+  transactionDate: {
+    type: Date,
+    required: true,
+  },
+  transactionStatus: {
+    type: String,
+    enum: ['Success', 'Failed', 'Pending'],
+  },
+});
+
+const Airtime = mongoose.model('Airtime', airtimeSchema);
+
+async function buyAirtime(airtimeData) {
+  try {
+    const airtime = new Airtime(airtimeData);
+    await airtime.save();
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { error: 'Failed to buy airtime' };
+  }
+}
+
+async function getAirtimeTransactions() {
+  try {
+    const airtimeTransactions = await Airtime.find();
+    return airtimeTransactions;
+  } catch (error) {
+    console.error(error);
+    return { error: 'Failed to get airtime transactions' };
+  }
+}
+
+async function getAirtimeTransaction(transactionId) {
+  try {
+    const airtimeTransaction = await Airtime.findOne({ transactionId });
+    if (!airtimeTransaction) {
+      return { error: 'Airtime transaction not found' };
+    }
+    return airtimeTransaction;
+  } catch (error) {
+    console.error(error);
+    return { error: 'Failed to get airtime transaction' };
+  }
+}
+
+async function updateAirtimeTransaction(transactionId, updates) {
+  try {
+    const airtimeTransaction = await Airtime.findOneAndUpdate({ transactionId }, updates, {
+      new: true,
+    });
+    if (!airtimeTransaction) {
+      return { error: 'Airtime transaction not found' };
+    }
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { error: 'Failed to update airtime transaction' };
+  }
+}
+app.post('/buy-airtime', async (req, res) => {
+  try {
+    const airtimeData = req.body;
+    const result = await buyAirtime(airtimeData);
+    if (result.error) {
+      return res.status(404).json({ error: result.error });
+    }
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to buy airtime' });
+  }
+});
+
+app.get('/get-airtime-transactions', async (req, res) => {
+  try {
+    const airtimeTransactions = await getAirtimeTransactions();
+    res.json(airtimeTransactions);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get airtime transactions' });
+  }
+});
+
+app.get('/get-airtime-transaction/:transactionId', async (req, res) => {
+  try {
+    const transactionId = req.params.transactionId;
+    const airtimeTransaction = await getAirtimeTransaction(transactionId);
+    if (airtimeTransaction.error) {
+      return res.status(404).json({ error: airtimeTransaction.error });
+    }
+    res.json(airtimeTransaction);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get airtime transaction' });
+  }
+});
+
+app.put('/update-airtime-transaction/:transactionId', async (req, res) => {
+  try {
+    const transactionId = req.params.transactionId;
+    const updates = req.body;
+    const result = await updateAirtimeTransaction(transactionId, updates);
+    if (result.error) {
+      return res.status(404).json({ error: result.error });
+    }
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to update airtime transaction' });
+  }
+});

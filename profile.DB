@@ -1,0 +1,51 @@
+const express = require('express');
+const app = express();
+
+// API endpoint to get profile information
+app.get('/get-profile', async (req, res) => {
+  try {
+    const userId = req.user.id; // Assuming user ID is stored in req.user
+
+    // Get profile information from database
+    const profile = await getProfileFromDatabase(userId);
+
+    res.json(profile);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get profile' });
+  }
+});
+
+// API endpoint to update profile information
+app.post('/update-profile', async (req, res) => {
+  try {
+    const userId = req.user.id; // Assuming user ID is stored in req.user
+
+    // Update profile information in database
+    const result = await updateProfileInDatabase(userId, req.body);
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to update profile' });
+  }
+});
+
+// Example function to get profile information from database
+async function getProfileFromDatabase(userId) {
+  // Implement logic to get profile information from database
+  // This may involve making a database query
+  return {
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+    bio: 'This is my bio',
+    profilePicture: 'profile_picture.jpg',
+  }; // Example profile
+}
+
+// Example function to update profile information in database
+async function updateProfileInDatabase(userId, profileData) {
+  // Implement logic to update profile information in database
+  // This may involve making a database query
+  return true; // Example result
+}

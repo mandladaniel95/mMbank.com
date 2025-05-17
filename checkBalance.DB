@@ -1,0 +1,68 @@
+
+app.listen(3000, () => {
+  console.log('Server listening on port 3000');
+});
+
+const mongoose = require('mongoose');
+
+const balanceSchema = new mongoose.Schema({
+  accountNumber: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  balance: {
+    type: Number,
+    required: true,
+  },
+  lastUpdated: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
+});
+
+const Balance = mongoose.model('Balance', balanceSchema);
+
+async function getBalance(accountNumber) {
+  try {
+    const balance = await Balance.findOne({ accountNumber });
+    if (!balance) {
+      return { error: 'Account not found' };
+    }
+    return balance.balance;
+  } catch (error) {
+    console.error(error);
+    return { error: 'Failed to get balance' };
+  }
+}
+
+async function updateBalance(accountNumber, newBalance) {
+  try {
+    const balance = await Balance.findOneAndUpdate({ accountNumber }, { balance: newBalance, lastUpdated: Date.now() }, {
+      new: true,
+    });
+    if (!balance) {
+      return { error: 'Account not found' };
+    }
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { error: 'Failed to update balance' };
+  }
+}
+
+const express = require('express');
+const app = express();
+
+let balance = 1000.00;
+let accountNumber = "1234567890";
+
+app.get('/check-balance', (req, res) => {
+  const account = req.query.accountNumber;
+  if (account === accountNumber) {
+    res.json({ balance: balance });
+  } else {
+    res.status(404).json({ error: 'Account not found' });
+  }
+});

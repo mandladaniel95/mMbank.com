@@ -43,23 +43,7 @@ loginForm.addEventListener('submit', async (e) => {
   await loginUser(username, password);
 });
 
-// Function to logout user
-async function logoutUser() {
-  try {
-    // Remove token from local storage
-    localStorage.removeItem('token');
-    // Redirect to login page
-    window.location.href = '/login';
-  } catch (error) {
-    console.error(error);
-  }
-}
 
-// Example usage
-const logoutButton = document.getElementById('logout-button');
-logoutButton.addEventListener('click', async () => {
-  await logoutUser();
-});
 
 
 app.post('/login', async (req, res) => {

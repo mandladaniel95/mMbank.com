@@ -1,17 +1,42 @@
-app.post('/make-deposit', async (req, res) => {
-    try {
-      const {
-        amount,
-        paymentMethod,
-        cardNumber,
-        expiryDate,
-        cvv,
-      } = req.body;
-  
-      // Validate deposit details
-      if (!amount || !paymentMethod || !cardNumber || !expiryDate || !cvv) {
-        return res.status(400).json({ error: 'Invalid deposit details' });
-      }
+
+ app.post('/make-deposit', async (req, res) => {
+  try {
+    const {
+      amount,
+      paymentMethod,
+      cardNumber,
+      expiryDate,
+      cvv,
+    } = req.body;
+
+    // Validate deposit details
+    if (!amount || !paymentMethod || !cardNumber || !expiryDate || !cvv) {
+      return res.status(400).json({ error: 'Invalid deposit details' });
+    }
+
+    const paymentGateway = new PaymentGateway();
+    const depositResponse = await paymentGateway.processDeposit({
+      amount,
+      paymentMethod,
+      cardNumber,
+      expiryDate,
+      cvv,
+    });
+
+    if (depositResponse.success) {
+      const account = await Account.findById(req.user.accountId);
+      account.balance += amount;
+      await account.save();
+    }
+
+    const confirmationMessage = `Deposit of ${amount} made successfully`;
+    await sendConfirmationMessage(req.user.email, confirmationMessage);
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to make deposit' });
+  }
   
       // Process deposit using payment gateway
       const paymentGateway = new PaymentGateway();
@@ -29,7 +54,7 @@ app.post('/make-deposit', async (req, res) => {
         account.balance += amount;
         await account.save();
       }
-  
+  else{
       // Send confirmation
       const confirmationMessage = `Deposit of ${amount} made successfully`;
       await sendConfirmationMessage(req.user.email, confirmationMessage);
@@ -39,4 +64,5 @@ app.post('/make-deposit', async (req, res) => {
       console.error(error);
       res.status(500).json({ error: 'Failed to make deposit' });
     }
-  });
+  }
+});

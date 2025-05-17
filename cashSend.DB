@@ -1,0 +1,66 @@
+const mongoose = require('mongoose');
+
+const cashSendSchema = new mongoose.Schema({
+  transactionId: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  senderAccountNumber: {
+    type: String,
+    required: true,
+  },
+  recipientAccountNumber: {
+    type: String,
+    required: true,
+  },
+  amount: {
+    type: Number,
+    required: true,
+  },
+  transactionDate: {
+    type: Date,
+    required: true,
+  },
+  transactionStatus: {
+    type: String,
+    enum: ['Success', 'Failed', 'Pending'],
+  },
+});
+
+const CashSend = mongoose.model('CashSend', cashSendSchema);
+
+async function sendCash(transactionData) {
+  try {
+    const cashSend = new CashSend(transactionData);
+    await cashSend.save();
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { error: 'Failed to send cash' };
+  }
+}
+
+async function getTransactions() {
+  try {
+    const transactions = await CashSend.find();
+    return transactions;
+  } catch (error) {
+    console.error(error);
+    return { error: 'Failed to get transactions' };
+  }
+}
+
+async function getTransaction(transactionId) {
+  try {
+    const transaction = await CashSend.findOne({ transactionId });
+    if (!transaction) {
+      return { error: 'Transaction not found' };
+    }
+    return transaction;
+  } catch (error) {
+    console.error(error);
+    return { error: 'Failed to get transaction' };
+  }
+}
+

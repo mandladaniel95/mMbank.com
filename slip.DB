@@ -1,0 +1,105 @@
+const mongoose = require('mongoose');
+
+const slipSchema = new mongoose.Schema({
+  slipId: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  date: {
+    type: Date,
+    required: true,
+  },
+  customerName: {
+    type: String,
+    required: true,
+  },
+  items: [
+    {
+      itemName: {
+        type: String,
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        required: true,
+      },
+      price: {
+        type: Number,
+        required: true,
+      },
+    },
+  ],
+  totalAmount: {
+    type: Number,
+    required: true,
+  },
+  paymentMethod: {
+    type: String,
+    required: true,
+  },
+});
+
+const Slip = mongoose.model('Slip', slipSchema);
+
+async function createSlip(slipData) {
+  try {
+    const slip = new Slip(slipData);
+    await slip.save();
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { error: 'Failed to create slip' };
+  }
+}
+
+async function getSlips() {
+  try {
+    const slips = await Slip.find();
+    return slips;
+  } catch (error) {
+    console.error(error);
+    return { error: 'Failed to get slips' };
+  }
+}
+
+async function getSlip(slipId) {
+  try {
+    const slip = await Slip.findOne({ slipId });
+    if (!slip) {
+      return { error: 'Slip not found' };
+    }
+    return slip;
+  } catch (error) {
+    console.error(error);
+    return { error: 'Failed to get slip' };
+  }
+}
+
+async function updateSlip(slipId, updates) {
+  try {
+    const slip = await Slip.findOneAndUpdate({ slipId }, updates, {
+      new: true,
+    });
+    if (!slip) {
+      return { error: 'Slip not found' };
+    }
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { error: 'Failed to update slip' };
+  }
+}
+
+async function deleteSlip(slipId) {
+  try {
+    const slip = await Slip.findOneAndDelete({ slipId });
+    if (!slip) {
+      return { error: 'Slip not found' };
+    }
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { error: 'Failed to delete slip' };
+  }
+}

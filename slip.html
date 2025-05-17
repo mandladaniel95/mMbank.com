@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>printSlip</title>
+  <title>mMbank Detailed Slip</title>
   <style>
     @media print {
       .no-print {
@@ -12,10 +12,13 @@
   
 </head>
 <body>
-  <h1>Slip Details</h1>
+  <h1>mMbank - Slip Details</h1>
   <p>Transaction ID: <span id="transaction-id"></span></p>
+
   <p>Date: <span id="date"></span></p>
-  <p>Amount: <span id="amount"></span></p>
+
+  <p>Amount:  <span id="amount"></span></p>
+
   <p>Description: <span id="description"></span></p>
 
   <button class="no-print" onclick="printSlip()">Print Slip</button>

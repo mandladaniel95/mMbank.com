@@ -1,0 +1,9 @@
+app.get('/images', (req, res) => {
+  const images = [
+    'image1.jpg',
+    'image2.jpg',
+    'image3.jpg',
+    // Add more images to the array
+  ];
+  res.json(images);
+});

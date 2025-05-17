@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buy Airtime</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Buy Airtime</h1>
+    <form id="buy-airtime-form">
+      <label for="phone-number">Phone Number:</label>
+      <input type="text" id="phone-number" name="phoneNumber" required>
+      <label for="amount">Amount:</label>
+      <input type="number" id="amount" name="amount" required>
+      <label for="network-provider">Network Provider:</label>
+      <select id="network-provider" name="networkProvider" required>
+        <option value="">Select Network Provider</option>
+        <option value="MTN">MTN</option>
+        <option value="Vodacom">Vodacom</option>
+        <option value="Cell C">Cell C</option>
+        <option value="Telkom">Telkom</option>
+      </select>
+      <button type="submit">Buy Airtime</button>
+    </form>
+    <div id="result"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

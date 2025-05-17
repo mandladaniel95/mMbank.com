@@ -1,0 +1,96 @@
+const mongoose = require('mongoose');
+
+const electricitySchema = new mongoose.Schema({
+  meterNumber: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  customerName: {
+    type: String,
+    required: true,
+  },
+  unitsConsumed: {
+    type: Number,
+    required: true,
+  },
+  amountDue: {
+    type: Number,
+    required: true,
+  },
+  paymentStatus: {
+    type: String,
+    enum: ['Paid', 'Unpaid', 'Partially Paid'],
+  },
+  paymentDate: {
+    type: Date,
+  },
+});
+
+const Electricity = mongoose.model('Electricity', electricitySchema);
+
+async function addElectricityBill(electricityData) {
+  try {
+    const electricity = new Electricity(electricityData);
+    await electricity.save();
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { error: 'Failed to add electricity bill' };
+  }
+}
+
+async function getElectricityBills() {
+  try {
+    const electricityBills = await Electricity.find();
+    return electricityBills;
+  } catch (error) {
+    console.error(error);
+    return { error: 'Failed to get electricity bills' };
+  }
+}
+
+async function getElectricityBill(meterNumber) {
+  try {
+    const electricityBill = await Electricity.findOne({ meterNumber });
+    if (!electricityBill) {
+      return { error: 'Electricity bill not found' };
+    }
+    return electricityBill;
+  } catch (error) {
+    console.error(error);
+    return { error: 'Failed to get electricity bill' };
+  }
+}
+
+async function updateElectricityBill(meterNumber, updates) {
+  try {
+    const electricityBill = await Electricity.findOneAndUpdate({ meterNumber }, updates, {
+      new: true,
+    });
+    if (!electricityBill) {
+      return { error: 'Electricity bill not found' };
+    }
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { error: 'Failed to update electricity bill' };
+  }
+}
+
+async function payElectricityBill(meterNumber, paymentData) {
+  try {
+    const electricityBill = await Electricity.findOne({ meterNumber });
+    if (!electricityBill) {
+      return { error: 'Electricity bill not found' };
+    }
+    electricityBill.paymentStatus = 'Paid';
+    electricityBill.paymentDate = new Date();
+    await electricityBill.save();
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { error: 'Failed to pay electricity bill' };
+  }
+}
+

@@ -81,7 +81,6 @@
       return res.status(400).json({ error: 'Invalid deposit details' });
     }
 
-    // Process deposit using payment gateway
     const paymentGateway = new PaymentGateway();
     const depositResponse = await paymentGateway.processDeposit({
       amount,
@@ -91,14 +90,12 @@
       cvv,
     });
 
-    // Update account balance
     if (depositResponse.success) {
       const account = await Account.findById(req.user.accountId);
       account.balance += amount;
       await account.save();
     }
 
-    // Send confirmation
     const confirmationMessage = `Deposit of ${amount} made successfully`;
     await sendConfirmationMessage(req.user.email, confirmationMessage);
 

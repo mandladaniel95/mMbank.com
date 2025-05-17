@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <img src="icon.png" alt="mMbank logo" width="100" height="100">
+  <img src="icon.png" alt="Company logo" width="100" height="100">
   <title>mMbank</title>
   
   <style>
@@ -49,6 +49,19 @@
   
 </head>
 
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Changing Background Image</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <div class="background-container">
+    <!-- Your homepage content here -->
+  </div>
+
+  <script src="script.js"></script>
+
+
   <nav>
     <ul>
       <li><a href="#home">Home</a></li>
@@ -79,7 +92,7 @@
       <li><a href="#cashsend">cashsend</a></li>
       <li><a href="#buy_voucher">buy_voucher</a></li>
       <li><a href="#buy_airtime">buy_airtime</a></li>
-      <li><a href="#purchase_electricity">electricity</a></li>
+      <li><a href="#buy_electricity">electricity</a></li>
        </ul>
     </nav>
   </section>
@@ -106,26 +119,25 @@
   <div class="login-form">
     <h2>Login mMbank</h2>
     <form>
+
       <label for="username">Username:</label>
       <input type="text" id="username" name="username" required>
 
       <label for="password">Password:</label>
       <input type="password" id="password" name="password" required>
-      
-      <input type="submit" value="Login">
-      <nav>
-        <ul>
-      <script>
-        
-        // JavaScript Code
-        const loginButton = document.getElementById('login-button');
+       <script>
+      const loginButton = document.getElementById('login-button');
       
         loginButton.addEventListener('click', () => {z
           window.location.href = '/home'; 
         });
-      </script>
-         </ul>
-        </nav>
+        </script>
+      <input type="submit" value="Login">
+     <nav>
+  <ul>
+<li><a href="forgotPassword.html">forgotPassword</a></li>
+</ul>
+</nav>
     </form>
   </div>
 </body>
