@@ -1,0 +1,58 @@
+
+CREATE TABLE Withdrawals (
+  id INT PRIMARY KEY,
+  user_id INT NOT NULL,
+  amount DECIMAL(10, 2) NOT NULL,
+  withdrawal_method VARCHAR(50) NOT NULL,
+  withdrawal_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  status VARCHAR(50) NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES Users(id)
+);
+
+CREATE TABLE Withdrawal_Methods (
+  id INT PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  description VARCHAR(255)
+);
+
+CREATE TABLE Withdrawal_History (
+  id INT PRIMARY KEY,
+  withdrawal_id INT NOT NULL,
+  status VARCHAR(50) NOT NULL,
+  update_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (withdrawal_id) REFERENCES Withdrawals(id)
+);
+
+INSERT INTO Withdrawals (user_id, amount, withdrawal_method, status)
+VALUES
+  (1, 100.00, 'Bank Transfer', 'Pending'),
+  (2, 50.00, 'Mobile Money', 'Processed');
+
+INSERT INTO Withdrawal_Methods (name, description)
+VALUES
+  ('Bank Transfer', 'Withdraw funds to bank account'),
+  ('Mobile Money', 'Withdraw funds to mobile money account');
+
+INSERT INTO Withdrawal_History (withdrawal_id, status, update_date)
+VALUES
+  (1, 'Pending', '2023-01-01 12:00:00'),
+  (1, 'Processed', '2023-01-02 12:00:00');
+
+
+-- Get all withdrawals for a user
+SELECT * FROM Withdrawals
+WHERE user_id = 1;
+
+-- Get the total amount withdrawn by a user
+SELECT SUM(amount) FROM Withdrawals
+WHERE user_id = 1;
+
+-- Get the status of a withdrawal
+SELECT status FROM Withdrawals
+WHERE id = 1;
+
+-- Update the status of a withdrawal
+UPDATE Withdrawals
+SET status = 'Processed'
+WHERE id = 1;
+
