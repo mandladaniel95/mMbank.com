@@ -24,9 +24,9 @@ module.exports = Amount;
 
 
 const amount = new Amount({
-  amount: 100.00,
-  description: 'Test transaction',
-  transactionType: 'credit',
+  amount: 0.00,
+  description: ,
+  transactionType: ,
 });
 
 amount.save((err) => {
