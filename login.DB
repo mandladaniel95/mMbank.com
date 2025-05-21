@@ -1,0 +1,43 @@
+
+CREATE TABLE Users (
+  id INT PRIMARY KEY,
+  username VARCHAR(50) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  last_login TIMESTAMP,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Login_History (
+  id INT PRIMARY KEY,
+  user_id INT NOT NULL,
+  login_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  ip_address VARCHAR(50),
+  device_info VARCHAR(255),
+  FOREIGN KEY (user_id) REFERENCES Users(id)
+);
+
+
+INSERT INTO Users (username, email, password)
+VALUES
+  ('mandla_daniel', 'mandladaniel95.com', 'hashed_password'),
+  ('Daniel_mamaba', 'mandladaniel95.com', 'hashed_password');
+
+INSERT INTO Login_History (user_id, ip_address, device_info)
+VALUES
+  (1, '192.168.1.100', 'Desktop Chrome'),
+  (2, '192.168.1.101', 'Mobile Safari');
+
+
+-- Get user information by username
+SELECT * FROM Users
+WHERE username = 'Mandla mamba';
+
+-- Get user login history
+SELECT * FROM Login_History
+WHERE user_id = 1;
+
+-- Update user password
+UPDATE Users
+SET password = 'new_hashed_password'
+WHERE id = 1;
