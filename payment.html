@@ -1,0 +1,78 @@
+
+<form id="payment-form">
+  <h2>Payment Information</h2>
+  <label for="amount">Amount:</label>
+  <input type="number" id="amount" name="amount" required>
+
+  <label for="payment-method">Payment Method:</label>
+  <select id="payment-method" name="payment-method" required>
+    <option value="">Select a payment method</option>
+    <option value="credit-card">Credit Card</option>
+    <option value="paypal">PayPal</option>
+  </select>
+
+  <label for="card-number">Card Number:</label>
+  <input type="text" id="card-number" name="card-number" required>
+
+  <label for="expiration-date">Expiration Date:</label>
+  <input type="text" id="expiration-date" name="expiration-date" required>
+
+  <label for="cvv">CVV:</label>
+  <input type="text" id="cvv" name="cvv" required>
+
+  <button id="pay-button">Pay Now</button>
+</form>
+
+
+#payment-form {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+input[type="number"],
+input[type="text"],
+select {
+  width: 100%;
+  height: 40px;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+button {
+  width: 100%;
+  height: 40px;
+  background-color: #4CAF50;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #3e8e41;
+}
+
+
+const paymentForm = document.getElementById('payment-form');
+
+paymentForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const amount = document.getElementById('amount').value;
+  const paymentMethod = document.getElementById('payment-method').value;
+
+  // Process payment using payment gateway API
+  // ...
+});
+

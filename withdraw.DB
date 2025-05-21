@@ -1,4 +1,3 @@
-
 CREATE TABLE Withdrawals (
   id INT PRIMARY KEY,
   user_id INT NOT NULL,
@@ -23,6 +22,7 @@ CREATE TABLE Withdrawal_History (
   FOREIGN KEY (withdrawal_id) REFERENCES Withdrawals(id)
 );
 
+
 INSERT INTO Withdrawals (user_id, amount, withdrawal_method, status)
 VALUES
   (1, 100.00, 'Bank Transfer', 'Pending'),
@@ -37,6 +37,7 @@ INSERT INTO Withdrawal_History (withdrawal_id, status, update_date)
 VALUES
   (1, 'Pending', '2023-01-01 12:00:00'),
   (1, 'Processed', '2023-01-02 12:00:00');
+
 
 
 -- Get all withdrawals for a user
