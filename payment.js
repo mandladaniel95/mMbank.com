@@ -91,3 +91,32 @@ app.post('/make-payment', (req, res) => {
       res.json({ success: false });
     });
 });
+
+
+
+
+// Payment retrieval function
+function retrievePayment(paymentId) {
+  // Send request to payment API
+  fetch(`/payments/${paymentId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer YOUR_API_KEY',
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        console.log(`Payment retrieved successfully: ${data.payment}`);
+        // Process payment data
+      } else {
+        console.log('Error retrieving payment:', data.error);
+      }
+    })
+    .catch((error) => console.error(error));
+}
+
+// Example usage
+const paymentId = 'PAY-1692357873';
+retrievePayment(paymentId);
