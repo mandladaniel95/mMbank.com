@@ -12,12 +12,12 @@
         }
       },
       "favorite": {
-        "name": "mMbank.com",
+        "name": "mMbank",
         "color": "no-color"
       },
       "savedConnectionType": "favorite",
       "connectionOptions": {
-        "connectionString": "mongodb://localhost:27017/https://www.mMbank.com",
+        "connectionString": "mongodb://localhost:27017/www.mMbank.com",
         "oidc": {
           "serializedState": "eyJvaWRjUGx1Z2luU3RhdGVWZXJzaW9uIjowLCJzdGF0ZSI6W119"
         }
