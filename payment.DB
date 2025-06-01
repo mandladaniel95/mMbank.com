@@ -45,8 +45,8 @@ VALUES
 
 INSERT INTO Payment_History (payment_id, status, update_date)
 VALUES
-  (1, 'Processed', '2023-01-01 12:00:00'),
-  (2, 'Pending', '2023-01-02 12:00:00');
+  (1, 'Processed', '2025-01-01 12:00:00'),
+  (2, 'Pending', '2025-01-02 12:00:00');
 
 INSERT INTO Payment_Transactions (payment_id, transaction_id, amount)
 VALUES
