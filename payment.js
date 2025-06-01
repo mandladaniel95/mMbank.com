@@ -118,5 +118,5 @@ function retrievePayment(paymentId) {
 }
 
 // Example usage
-const paymentId = 'PAY-1692357873';
+const paymentId = 'PAY-5284 9730 2961 7424';
 retrievePayment(paymentId);
