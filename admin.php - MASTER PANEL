@@ -1,0 +1,24 @@
+<?php include 'db.php';
+if(($_GET['pass']??'')!='admin123' && !isset($_SESSION['is_admin'])){
+  if(isset($_POST['pass']) && $_POST['pass']=='admin123'){ $_SESSION['is_admin']=1; }
+  else { echo '<div class="deposit-panel"><form method="POST"><h2>Admin Login</h2><input type="password" name="pass" placeholder="Password admin123"><button>Login</button></form></div>'; exit; }
+}
+if(isset($_GET['approve'])) $conn->query("UPDATE deposits SET status='approved' WHERE id=".intval($_GET['approve']));
+if(isset($_GET['reject'])) $conn->query("UPDATE deposits SET status='rejected' WHERE id=".intval($_GET['reject']));
+if(isset($_GET['w_reject'])){ $id=intval($_GET['w_reject']); $w=$conn->query("SELECT * FROM withdrawals WHERE id=$id")->fetch_assoc(); $conn->query("UPDATE users SET balance = balance + {$w['amount']} WHERE id = {$w['user_id']}"); $conn->query("UPDATE withdrawals SET status='rejected' WHERE id=$id"); }
+if(isset($_GET['kyc_approve'])) $conn->query("UPDATE kyc SET status='approved' WHERE id=".intval($_GET['kyc_approve']));
+if(isset($_GET['kyc_reject'])) $conn->query("UPDATE kyc SET status='rejected' WHERE id=".intval($_GET['kyc_reject']));
+?>
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="style.css"></head><body>
+<div style="max-width:1100px;margin:auto;padding:10px">
+<h2>mMbank Admin Panel</h2>
+<div class="card"><h3>💰 Deposits</h3><table><tr><th>ID</th><th>User</th><th>Amt</th><th>Method</th><th>Ref</th><th>Status</th><th>Action</th></tr>
+<?php $q=$conn->query("SELECT d.*, u.email FROM deposits d JOIN users u ON u.id=d.user_id ORDER BY d.id DESC LIMIT 100"); while($r=$q->fetch_assoc()){ echo "<tr><td>{$r['id']}</td><td>{$r['email']}</td><td>R{$r['amount']}</td><td>{$r['method']}</td><td>{$r['reference']}</td><td>{$r['status']}</td><td>"; if($r['status']=='pending') echo "<a class='btn approve' href='?approve={$r['id']}'>Approve</a>"; echo "</td></tr>"; } ?>
+</table></div>
+<div class="card"><h3>💸 Withdrawals</h3><table><tr><th>ID</th><th>User</th><th>Amount</th><th>Bank</th><th>Account</th><th>Status</th><th>Action</th></tr>
+<?php $q=$conn->query("SELECT w.*, u.email FROM withdrawals w JOIN users u ON u.id=w.user_id ORDER BY w.id DESC"); while($r=$q->fetch_assoc()){ echo "<tr><td>{$r['id']}</td><td>{$r['email']}</td><td>R{$r['amount']}</td><td>{$r['bank_name']}</td><td>{$r['account_number']}</td><td>{$r['status']}</td><td>"; if($r['status']=='pending') echo "<a class='btn approve' href='auto-payout.php?pay={$r['id']}'>AUTO PAY</a> <a class='btn delete' href='?w_reject={$r['id']}'>Reject</a>"; echo "</td></tr>"; } ?>
+</table></div>
+<div class="card"><h3>🛡️ FICA KYC</h3><table><tr><th>User</th><th>ID</th><th>Files</th><th>Status</th><th>Action</th></tr>
+<?php $q=$conn->query("SELECT k.*, u.email FROM kyc k JOIN users u ON u.id=k.user_id ORDER BY k.id DESC"); while($r=$q->fetch_assoc()){ echo "<tr><td>{$r['email']}</td><td>{$r['id_number']}</td><td><a href='{$r['id_file']}' target='_blank'>ID</a> | <a href='{$r['proof_file']}' target='_blank'>Proof</a></td><td>{$r['status']}</td><td>"; if($r['status']=='pending') echo "<a class='btn approve' href='?kyc_approve={$r['id']}'>Approve</a> <a class='btn delete' href='?kyc_reject={$r['id']}'>Reject</a>"; echo "</td></tr>"; } ?>
+</table></div>
+</div></body></html>

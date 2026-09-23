@@ -1,0 +1,24 @@
+<?php include 'db.php';
+if(!isset($_POST['amount'])){ header("Location: checkout.php"); exit; }
+$amt = floatval($_POST['amount']);
+$ref = 'OZOW'.time().$_SESSION['user_id'];
+$conn->query("INSERT INTO deposits (user_id, amount, method, status, reference) VALUES ({$_SESSION['user_id']}, $amt, 'ozow', 'pending', '$ref')");
+
+// LIVE OZOW CONFIG - Replace when you get Ozow merchant keys
+$siteCode = 'YOUR_OZOW_SITE_CODE';
+$privateKey = 'YOUR_OZOW_PRIVATE_KEY';
+$apiKey = 'YOUR_OZOW_API_KEY';
+
+if($siteCode=='YOUR_OZOW_SITE_CODE'){
+  // DEMO MODE - No real Ozow keys yet
+  echo "<div style='max-width:450px;margin:30px auto;font-family:sans-serif;text-align:center;padding:20px;border:2px dashed #e30613;border-radius:20px'>
+  <h2>Ozow Demo Mode</h2>
+  <p>Amount: <b>R$amt</b><br>Ref: $ref</p>
+  <p style='font-size:13px;color:#666'>Add your Ozow keys in ozow.php to go live.<br>For now, click below to simulate successful payment:</p>
+  <a href='api.php?approve=$ref' style='display:block;padding:15px;background:#000;color:#fff;border-radius:12px;text-decoration:none;font-weight:bold;margin-top:15px'>SIMULATE SUCCESSFUL PAYMENT</a>
+  <br><a href='checkout.php'>Cancel</a>
+  </div>";
+  exit;
+}
+// Real Ozow redirect would go here
+?>

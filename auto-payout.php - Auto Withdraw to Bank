@@ -1,0 +1,46 @@
+<?php include 'db.php';
+// REPLACE WITH YOUR LIVE KEY
+$PAYSTACK_SECRET = 'sk_test_YOUR_KEY_HERE'; // Change to sk_live_... when live
+
+function paystackRequest($endpoint, $data){
+  global $PAYSTACK_SECRET;
+  $ch = curl_init("https://api.paystack.co/$endpoint");
+  curl_setopt($ch, CURLOPT_POST, true);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+  curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: Bearer $PAYSTACK_SECRET","Content-Type: application/json"]);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  $res = curl_exec($ch);
+  curl_close($ch);
+  return json_decode($res, true);
+}
+
+if(isset($_GET['pay'])){
+  $id=intval($_GET['pay']);
+  $w=$conn->query("SELECT * FROM withdrawals WHERE id=$id")->fetch_assoc();
+  if(!$w || $w['status']!='pending'){ die("Already processed"); }
+  $user=$conn->query("SELECT * FROM users WHERE id={$w['user_id']}")->fetch_assoc();
+  
+  $bankCodes=['Capitec'=>'470010','FNB'=>'250655','ABSA'=>'632005','Standard Bank'=>'051001','Nedbank'=>'198765','TymeBank'=>'678910'];
+  $code=$bankCodes[$w['bank_name']]??'632005';
+
+  $recipient=paystackRequest('transferrecipient',['type'=>'nuban','name'=>$user['fullname']??'mMbank User','account_number'=>$w['account_number'],'bank_code'=>$code,'currency'=>'ZAR']);
+  
+  if(!$recipient['status']){
+    die("<h2>Bank Error: ".$recipient['message']."</h2><a href='admin.php'>Back to Admin</a>");
+  }
+
+  $transfer=paystackRequest('transfer',['source'=>'balance','amount'=>$w['amount']*100,'recipient'=>$recipient['data']['recipient_code'],'reason'=>'mMbank withdrawal #'.$w['id']]);
+
+  if($transfer['status']){
+    $conn->query("UPDATE withdrawals SET status='paid' WHERE id=$id");
+    echo "<h2>✅ R{$w['amount']} sent to {$w['bank_name']} {$w['account_number']}</h2><p>Ref: ".$transfer['data']['transfer_code']."</p><a href='admin.php'>Back</a>";
+  } else {
+    echo "<h2>❌ Transfer failed: ".$transfer['message']."</h2>";
+    $conn->query("UPDATE users SET balance = balance + {$w['amount']} WHERE id = {$w['user_id']}");
+    $conn->query("UPDATE withdrawals SET status='failed' WHERE id=$id");
+    echo "<a href='admin.php'>Back - Money refunded</a>";
+  }
+  exit;
+}
+echo "No payout ID";
+?>
